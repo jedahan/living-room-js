@@ -100,8 +100,7 @@ class Room {
     this._db()
       .then( _ => _.json() )
       .then( json => {
-        const {assertions} = json;
-        solutions.forEach(assertions);
+        assertsions.forEach(callbackFn);
       });
   }
 

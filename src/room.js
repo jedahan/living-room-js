@@ -102,7 +102,7 @@ export default class Room {
       .then( _ => _.json() )
       .then( json => {
         const {assertions} = json
-        assertsions.forEach(callbackFn)
+        assertions.forEach(callbackFn)
       })
   }
 
