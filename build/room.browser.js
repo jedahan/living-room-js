@@ -320,8 +320,8 @@ class Room {
     this._db()
       .then( _ => _.json() )
       .then( json => {
-        const {assertions} = json;
-        callbackFn(assertions);
+        const {solutions} = json;
+        callbackFn(solutions);
       });
   }
 
@@ -329,7 +329,8 @@ class Room {
     this._db()
       .then( _ => _.json() )
       .then( json => {
-        assertsions.forEach(callbackFn);
+        const {solutions} = json;
+        solutions.forEach(callbackFn);
       });
   }
 
