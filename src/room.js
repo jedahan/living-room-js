@@ -92,8 +92,8 @@ export default class Room {
     this._db()
       .then( _ => _.json() )
       .then( json => {
-        const {solutions} = json
-        callbackFn(solutions)
+        const {assertions} = json
+        callbackFn(assertions)
       })
   }
 
@@ -101,8 +101,8 @@ export default class Room {
     this._db()
       .then( _ => _.json() )
       .then( json => {
-        const {solutions} = json
-        solutions.forEach(callbackFn)
+        const {assertions} = json
+        assertsions.forEach(callbackFn)
       })
   }
 

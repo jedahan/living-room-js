@@ -11,6 +11,9 @@ var global$1 = typeof global !== "undefined" ? global :
             typeof self !== "undefined" ? self :
             typeof window !== "undefined" ? window : {}
 
+// shim for using process in browser
+// based off https://github.com/defunctzombie/node-process/blob/master/browser.js
+
 function defaultSetTimout() {
     throw new Error('setTimeout has not been defined');
 }
@@ -317,8 +320,8 @@ class Room {
     this._db()
       .then( _ => _.json() )
       .then( json => {
-        const {solutions} = json;
-        callbackFn(solutions);
+        const {assertions} = json;
+        callbackFn(assertions);
       });
   }
 
@@ -326,8 +329,8 @@ class Room {
     this._db()
       .then( _ => _.json() )
       .then( json => {
-        const {solutions} = json;
-        solutions.forEach(callbackFn);
+        const {assertions} = json;
+        solutions.forEach(assertions);
       });
   }
 
