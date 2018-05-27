@@ -11,8 +11,8 @@ test.beforeEach(async t => {
 
 test.afterEach.always(async t => {
   const facts = await fetch(`${t.context.room._host}/facts`).then(response => response.json())
-  t.is(facts.assertions.length, 1)
   // the two tests we run should have separate data!
+  t.is(facts.assertions.length, 1)
 })
 
 test(`await assert`, async t => {
