@@ -4,37 +4,23 @@ const { LivingRoomService } = require(`@living-room/service-js`)
 const Room = require(`../build/room`)
 
 test.beforeEach(async t => {
-  const service = new LivingRoomService({verbose: true})
-  const { port } = await service.listen()
+  const service = new LivingRoomService()
+  const { port } = await service.listen({verbose: false})
   t.context.room = new Room(`http://localhost:${port}`)
-  t.context.assert = async assert => {
-    const opts = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({facts: [{assert}]})
-    }
-    console.dir(`asserting to ${t.context.room._host}`)
-    return fetch(`${t.context.room._host}/messages`, opts).then(response => response.json())
-  }
 })
 
 test.afterEach.always(async t => {
-  const { room } = t.context
-  const opts = {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  }
-  const facts = await fetch(`${room._host}/facts`, opts).then(response => response.json())
+  const facts = await fetch(`${t.context.room._host}/facts`).then(response => response.json())
   t.is(facts.assertions.length, 1)
+  // the two tests we run should have separate data!
 })
 
-// this leaks context to other tests...
 test(`await assert`, async t => {
-  t.plan(1)
+  t.plan(2)
   const { room } = t.context
-  const { facts } = await t.context.assert(`hello`)
+  const { facts } = await room.assert(`hello`)
   t.deepEqual(facts, [{assert: `hello`}])
-  room.select(`$word`).then(result => {
+  return room.select(`$word`).then(result => {
     t.deepEqual(result, [{
       word: { word: `hello` }
     }])
@@ -43,15 +29,15 @@ test(`await assert`, async t => {
 
 test(`no callback subscribe`, t => {
   t.plan(2)
+  const { room } = t.context
   return new Promise((resolve, reject) => {
-    const { room } = t.context
     room.subscribe(`$what callback assert`, ({assertions, retractions}) => {
       t.deepEqual(assertions, [{what: `no`}])
       t.deepEqual(retractions, [])
       resolve()
     })
 
-    t.context.assert(`no callback assert`)
+    room.assert(`no callback assert`)
   })
 })
 
